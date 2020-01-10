@@ -16,7 +16,7 @@
         @click="infoWindowOpen(index, marker)"
       >
         <bm-info-window
-          :show="marker.infoWindow.show"
+          :show="marker.show"
           @close="infoWindowClose(index, marker)"
           @open="infoWindowOpen(index, marker)"
         >
@@ -56,9 +56,11 @@ export default {
   		}
   	},
   	markers: {
-  		 Array,
+  		Array,
 	  	default () {
-	  		return [];
+	  		return [{
+          show: true,
+        }];
 	  	}
   	}
   },
@@ -75,7 +77,7 @@ export default {
   watch: {
     map: {
     	handler (newVal) {
-    		this.map = newVal;
+    		this.map = this.markerAddAttr(newVal);
     	},
     	deep: true,
     },
@@ -88,12 +90,26 @@ export default {
   },
   methods: {
     infoWindowOpen (index, marker) {//打开窗口
-      marker.infoWindow.show = true;
+      marker.show = true;
       this.$set(this.markers, index, marker);
     },
     infoWindowClose (index, marker) {//关闭窗口
-      marker.infoWindow.show = false;
+      marker.show = false;
       this.$set(this.markers, index, marker);
+    },
+    markerAddAttr (markerList) {//添加默认值
+      markerList.map((item, index) => {
+        return Object.assign(item,{
+          markerIcon: {
+            url: 'http://api0.map.bdimg.com/images/marker_red_sprite.png', 
+            size: {
+              width: 30, 
+              height: 40
+            }
+          },
+          show: index>0?false: true,
+        })
+      })
     },
   },
 }
