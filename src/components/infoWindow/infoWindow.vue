@@ -58,9 +58,7 @@ export default {
   	markers: {
   		Array,
 	  	default () {
-	  		return [{
-          show: true,
-        }];
+	  		return [];
 	  	}
   	}
   },
@@ -77,16 +75,10 @@ export default {
   watch: {
     map: {
     	handler (newVal) {
-    		this.map = this.markerAddAttr(newVal);
+    		this.map = newVal;
     	},
     	deep: true,
     },
-    markers: {
-    	handler (newVal) {
-    		this.markers = newVal;
-    	},
-    	deep: true,
-    }
   },
   methods: {
     infoWindowOpen (index, marker) {//打开窗口
@@ -97,21 +89,26 @@ export default {
       marker.show = false;
       this.$set(this.markers, index, marker);
     },
-    markerAddAttr (markerList) {//添加默认值
-      markerList.map((item, index) => {
-        return Object.assign(item,{
-          markerIcon: {
-            url: 'http://api0.map.bdimg.com/images/marker_red_sprite.png', 
-            size: {
-              width: 30, 
-              height: 40
+    markerAddAttr () {//添加默认值
+      this.markers.map((item, index) => {
+        item = Object.assign({
+          ... !item.markerIcon && {markerIcon: {
+              url: 'http://api0.map.bdimg.com/images/marker_red_sprite.png', 
+              size: {
+                width: 30, 
+                height: 40
+              }
             }
           },
-          show: index>0?false: true,
-        })
+          ... !item.show && {show: index>0?false: true},
+        }, item);
+        this.$set(this.markers, index, item);
       })
     },
   },
+  created () {
+    this.markerAddAttr();
+  }
 }
 </script>
 

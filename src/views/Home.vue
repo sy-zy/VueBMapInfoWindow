@@ -31,7 +31,6 @@ export default {
         {
           lng: '112.685238',
           lat: '28.136284',
-          show: true,
         },
         {
           lng: '112.958309',
