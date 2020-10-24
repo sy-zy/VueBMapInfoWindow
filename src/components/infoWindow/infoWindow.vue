@@ -15,6 +15,7 @@
         :icon="marker.markerIcon"
         @click="infoWindowOpen(index, marker)"
       >
+      <!-- 信息窗口 -->
         <bm-info-window
           :show="marker.show"
           @close="infoWindowClose(index, marker)"
@@ -84,12 +85,13 @@ export default {
     infoWindowOpen (index, marker) {//打开窗口
       marker.show = true;
       this.$set(this.markers, index, marker);
+      this.$emit("on-change",marker);
     },
     infoWindowClose (index, marker) {//关闭窗口
       marker.show = false;
       this.$set(this.markers, index, marker);
     },
-    markerAddAttr () {//添加默认值
+    markerAddAttr () {//添加默认值：标记点图标、show显示隐藏控制属性
       this.markers.map((item, index) => {
         item = Object.assign({
           ... !item.markerIcon && {markerIcon: {
